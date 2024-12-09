@@ -3,7 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import * as dotenv from 'dotenv';
 import { UserModule } from './user/user.module';
 
-dotenv.config(); // .env 파일의 환경 변수를 로드
+dotenv.config();
 
 @Module({
   imports: [
