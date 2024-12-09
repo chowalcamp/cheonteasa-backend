@@ -1,0 +1,48 @@
+name: Deploy to cloudtype
+on:
+  push:
+    branches:
+      - develop
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Connect deploy key
+        uses: cloudtype-github-actions/connect@v1
+        with:
+          token: ${{ secrets.CLOUDTYPE_TOKEN }}
+          ghtoken: ${{ secrets.GHP_TOKEN }}
+      - name: Deploy
+        uses: cloudtype-github-actions/deploy@v1
+        with:
+          token: ${{ secrets.CLOUDTYPE_TOKEN }}
+          project: rlaehddhs12/cheontaesa
+          stage: main
+          yaml: |
+            name: cheonteasa-backend
+            app: node@22
+            options:
+              env:
+                - name: DB_TYPE
+                  value: mysql
+                - name: DB_HOST
+                  value: svc.sel4.cloudtype.app
+                - name: DB_PORT
+                  value: "31690"
+                - name: DB_USERNAME
+                  value: root
+                - name: DB_PASSWORD
+                  value: cheontaesa
+                - name: DB_DATABASE
+                  value: cheontaesa
+              buildenv: []
+              ports: "3000"
+              install: yarn install
+              build: yarn build
+              start: yarn start
+            context:
+              git:
+                url: git@github.com:${{ github.repository }}.git
+                ref: ${{ github.ref }}
