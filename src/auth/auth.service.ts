@@ -7,6 +7,6 @@ export class AuthService {
   }
 
   generateToken(): string {
-    return 'your-auth-token';
+    return 'token';
   }
 }

@@ -7,6 +7,7 @@ import { AuthService } from './auth/auth.service';
 import { AuthModule } from './auth/auth.module';
 import { NoticeController } from './notice/notice.controller';
 import { NoticeModule } from './notice/notice.module';
+import { NoticeService } from './notice/notice.service';
 
 dotenv.config();
 
@@ -26,8 +27,7 @@ dotenv.config();
     AuthModule,
     NoticeModule,
   ],
-  controllers: [AuthController],
-  providers: [AuthService],
-  controllers: [NoticeController],
+  controllers: [AuthController, NoticeController],
+  providers: [AuthService, NoticeService],
 })
 export class AppModule {}

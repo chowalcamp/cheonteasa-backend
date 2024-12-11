@@ -14,7 +14,8 @@ export class AuthController {
     const { username, password } = body;
     if (this.authService.validateUser(username, password)) {
       const token = this.authService.generateToken();
-      res.cookie('authToken', token, { httpOnly: true });
+      // 쿠키에 토큰 저장
+      res.cookie('authToken', token, { httpOnly: true, secure: true });
       return res.send('로그인 성공');
     } else {
       return res.status(401).send('로그인 실패');
