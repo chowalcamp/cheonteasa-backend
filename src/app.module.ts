@@ -2,8 +2,12 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import * as dotenv from 'dotenv';
 import { UserModule } from './user/user.module';
+import { AuthController } from './auth/auth.controller';
+import { AuthService } from './auth/auth.service';
+import { AuthModule } from './auth/auth.module';
 import { NoticeController } from './notice/notice.controller';
 import { NoticeModule } from './notice/notice.module';
+import { NoticeService } from './notice/notice.service';
 
 dotenv.config();
 
@@ -20,8 +24,10 @@ dotenv.config();
       synchronize: true,
     }),
     UserModule,
+    AuthModule,
     NoticeModule,
   ],
-  controllers: [NoticeController],
+  controllers: [AuthController, NoticeController],
+  providers: [AuthService, NoticeService],
 })
 export class AppModule {}
