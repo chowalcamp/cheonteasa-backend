@@ -1,4 +1,4 @@
-export class Notice {
+export class NoticeDto {
   title: string;
   content: string;
 }

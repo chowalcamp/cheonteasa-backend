@@ -3,7 +3,7 @@ import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 @Entity()
 export class Notice {
   @PrimaryGeneratedColumn()
-  id: string;
+  id: number;
 
   @Column({ nullable: true })
   title: string;

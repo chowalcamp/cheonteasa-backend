@@ -8,14 +8,14 @@ import {
   Param,
 } from '@nestjs/common';
 import { NoticeService } from './notice.service';
-import { Notice } from 'src/entities/notice.entity';
+import { NoticeDto } from './dto/notice.dto';
 
 @Controller('notice')
 export class NoticeController {
   constructor(private readonly noticeService: NoticeService) {}
 
   @Post()
-  createNotice(@Body() noticeData: Notice) {
+  createNotice(@Body() noticeData: NoticeDto) {
     return this.noticeService.create(noticeData);
   }
 
@@ -25,17 +25,17 @@ export class NoticeController {
   }
 
   @Get(':id')
-  getNotice(@Param('id') id: string) {
+  getNotice(@Param('id') id: number) {
     return this.noticeService.findOne(id);
   }
 
   @Put(':id')
-  updateNotice(@Param('id') id: string, @Body() noticeData: Notice) {
+  updateNotice(@Param('id') id: number, @Body() noticeData: NoticeDto) {
     return this.noticeService.update(id, noticeData);
   }
 
   @Delete(':id')
-  deleteNotice(@Param('id') id: string) {
+  deleteNotice(@Param('id') id: number) {
     return this.noticeService.remove(id);
   }
 }
