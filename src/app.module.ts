@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import * as dotenv from 'dotenv';
 import { UserModule } from './user/user.module';
-import { NoticeController } from './notice/notice.controller';
+import { AuthModule } from './auth/auth.module';
 import { NoticeModule } from './notice/notice.module';
 
 dotenv.config();
@@ -20,8 +20,8 @@ dotenv.config();
       synchronize: true,
     }),
     UserModule,
+    AuthModule,
     NoticeModule,
   ],
-  controllers: [NoticeController],
 })
 export class AppModule {}

@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Notice } from '../entities/notice.entity';
+import { NoticeDto } from './dto/notice.dto';
 
 @Injectable()
 export class NoticeService {
@@ -10,26 +11,28 @@ export class NoticeService {
     private readonly noticeRepository: Repository<Notice>,
   ) {}
 
-  async create(noticeData: Notice) {
+  async create(noticeData: NoticeDto) {
     const newNotice = this.noticeRepository.create(noticeData);
     return await this.noticeRepository.save(newNotice);
   }
 
-  async findOne(id: string) {
-    return await this.noticeRepository.findOne({ where: { id } });
+  async findOne(noticeId: number) {
+    return await this.noticeRepository.findOne({ where: { id: noticeId } });
   }
 
   async findAll() {
     return await this.noticeRepository.find();
   }
 
-  async update(id: string, noticeData: Notice) {
-    await this.noticeRepository.update(id, noticeData);
-    return await this.noticeRepository.findOne({ where: { id } });
+  async update(noticeId: number, noticeData: NoticeDto) {
+    await this.noticeRepository.update(noticeId, noticeData);
+    return await this.noticeRepository.findOne({ where: { id: noticeId } });
   }
 
-  async remove(id: string) {
-    const notice = await this.noticeRepository.findOne({ where: { id } });
+  async remove(noticeId: number) {
+    const notice = await this.noticeRepository.findOne({
+      where: { id: noticeId },
+    });
     if (notice) {
       await this.noticeRepository.remove(notice);
       return notice;
