@@ -1,4 +1,5 @@
 export class Notice {
   title: string;
-  content: string;
+  image?: string;
+  content?: string;
 }
