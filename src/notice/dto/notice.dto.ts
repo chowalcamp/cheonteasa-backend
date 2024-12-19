@@ -1,4 +1,5 @@
 export class NoticeDto {
   title: string;
-  content: string;
+  image?: string;
+  content?: string;
 }
