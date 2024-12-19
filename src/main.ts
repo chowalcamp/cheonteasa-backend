@@ -8,7 +8,10 @@ async function bootstrap() {
 
   // CORS 설정
   app.enableCors({
-    origin: ['http://localhost:3000'], // 허용할 도메인 목록
+    origin: [
+      'http://localhost:3000',
+      'https://port-next-cheontaesa-m4h0qv5272cd3f9d.sel4.cloudtype.app',
+    ], // 허용할 도메인 목록
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
   });
