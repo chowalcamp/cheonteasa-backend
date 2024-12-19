@@ -25,17 +25,17 @@ export class NoticeController {
   }
 
   @Get(':id')
-  getNotice(@Param('id') id: number) {
-    return this.noticeService.findOne(id);
+  getNotice(@Param('id') noticeId: number) {
+    return this.noticeService.findOne(noticeId);
   }
 
   @Put(':id')
-  updateNotice(@Param('id') id: number, @Body() noticeData: NoticeDto) {
-    return this.noticeService.update(id, noticeData);
+  updateNotice(@Param('id') noticeId: number, @Body() noticeData: NoticeDto) {
+    return this.noticeService.update(noticeId, noticeData);
   }
 
   @Delete(':id')
-  deleteNotice(@Param('id') id: number) {
-    return this.noticeService.remove(id);
+  deleteNotice(@Param('id') noticeId: number) {
+    return this.noticeService.remove(noticeId);
   }
 }

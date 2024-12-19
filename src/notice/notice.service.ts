@@ -16,21 +16,23 @@ export class NoticeService {
     return await this.noticeRepository.save(newNotice);
   }
 
-  async findOne(id: number) {
-    return await this.noticeRepository.findOne({ where: { id } });
+  async findOne(noticeId: number) {
+    return await this.noticeRepository.findOne({ where: { id: noticeId } });
   }
 
   async findAll() {
     return await this.noticeRepository.find();
   }
 
-  async update(id: number, noticeData: NoticeDto) {
-    await this.noticeRepository.update(id, noticeData);
-    return await this.noticeRepository.findOne({ where: { id } });
+  async update(noticeId: number, noticeData: NoticeDto) {
+    await this.noticeRepository.update(noticeId, noticeData);
+    return await this.noticeRepository.findOne({ where: { id: noticeId } });
   }
 
-  async remove(id: number) {
-    const notice = await this.noticeRepository.findOne({ where: { id } });
+  async remove(noticeId: number) {
+    const notice = await this.noticeRepository.findOne({
+      where: { id: noticeId },
+    });
     if (notice) {
       await this.noticeRepository.remove(notice);
       return notice;
