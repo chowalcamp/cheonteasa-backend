@@ -1,5 +1,6 @@
 export class NoticeDto {
-  title: string;
+  noticeId: number;
+  title?: string;
   image?: string;
   content?: string;
 }

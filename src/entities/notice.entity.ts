@@ -12,10 +12,10 @@ export class Notice {
   id: number;
 
   @Column({ nullable: true })
-  title: string;
+  title?: string;
 
-  @Column({ nullable: true })
-  image?: string;
+  @Column('json', { nullable: true })
+  images?: string[];
 
   @Column({ nullable: true })
   content?: string;
