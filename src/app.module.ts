@@ -5,7 +5,7 @@ import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { NoticeModule } from './notice/notice.module';
 import { UploadModule } from './upload/upload.module';
-
+import { NewsModule } from './news/news.modules';
 dotenv.config();
 
 @Module({
@@ -24,6 +24,7 @@ dotenv.config();
     AuthModule,
     NoticeModule,
     UploadModule,
+    NewsModule,
   ],
 })
 export class AppModule {}
