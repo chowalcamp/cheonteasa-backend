@@ -20,10 +20,7 @@ export class UploadService {
     });
   }
 
-  async uploadImages(
-    noticeId: number,
-    files: Express.Multer.File[],
-  ): Promise<string[]> {
+  async uploadImages(files: Express.Multer.File[]): Promise<string[]> {
     const imageUrls: string[] = [];
 
     for (const file of files) {
@@ -39,9 +36,7 @@ export class UploadService {
       const imageUrl = uploadResult.Location;
       imageUrls.push(imageUrl);
     }
-
-    await this.noticeRepository.update(noticeId, { images: imageUrls });
-
+    await this.noticeRepository.save({ images: imageUrls });
     return imageUrls;
   }
 }
