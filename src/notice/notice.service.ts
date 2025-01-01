@@ -12,6 +12,9 @@ export class NoticeService {
   ) {}
 
   async create(noticeData: NoticeDto) {
+    if (!noticeData.content) {
+      throw new Error('Content is required');
+    }
     const notice = this.noticeRepository.create(noticeData);
     await this.noticeRepository.save(notice);
     return notice;

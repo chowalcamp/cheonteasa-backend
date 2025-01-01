@@ -17,7 +17,7 @@ export class Notice {
   @Column('json', { nullable: true })
   images?: string[];
 
-  @Column({ nullable: true })
+  @Column('json', { nullable: true })
   content?: string;
 
   @CreateDateColumn()
