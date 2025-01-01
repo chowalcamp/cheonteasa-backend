@@ -12,9 +12,9 @@ export class NoticeService {
   ) {}
 
   async create(noticeData: NoticeDto) {
-    const newNotice = this.noticeRepository.create(noticeData);
-    console.log(newNotice);
-    return newNotice;
+    const notice = this.noticeRepository.create(noticeData);
+    await this.noticeRepository.save(notice);
+    return notice;
   }
 
   async findOne(noticeId: number) {
@@ -22,7 +22,9 @@ export class NoticeService {
   }
 
   async findAll() {
-    return await this.noticeRepository.find();
+    const notices = await this.noticeRepository.find();
+    console.log(notices); // 결과 확인
+    return notices;
   }
 
   async update(noticeId: number, noticeData: NoticeDto) {
