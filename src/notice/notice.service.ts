@@ -31,6 +31,9 @@ export class NoticeService {
   }
 
   async update(noticeId: number, noticeData: NoticeDto) {
+    if (!noticeData.content || !noticeData.title) {
+      throw new Error('Content or title are required');
+    }
     await this.noticeRepository.update(noticeId, noticeData);
     return await this.noticeRepository.findOne({ where: { id: noticeId } });
   }
