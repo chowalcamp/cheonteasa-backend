@@ -1,12 +1,4 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Put,
-  Delete,
-  Body,
-  Param,
-} from '@nestjs/common';
+import { Controller, Get, Post, Delete, Body, Param } from '@nestjs/common';
 import { NoticeService } from './notice.service';
 import { NoticeDto } from './dto/notice.dto';
 
@@ -30,8 +22,9 @@ export class NoticeController {
     return this.noticeService.findOne(noticeId);
   }
 
-  @Put(':id')
+  @Post('/update/:id')
   updateNotice(@Param('id') noticeId: number, @Body() noticeData: NoticeDto) {
+    console.log('Received update request for notice:', noticeId);
     return this.noticeService.update(noticeId, noticeData);
   }
 

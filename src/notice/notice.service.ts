@@ -31,10 +31,18 @@ export class NoticeService {
   }
 
   async update(noticeId: number, noticeData: NoticeDto) {
+    console.log('Updating Notice:', noticeId, noticeData);
     if (!noticeData.content || !noticeData.title) {
       throw new Error('Content or title are required');
     }
-    await this.noticeRepository.update({ id: noticeId }, noticeData);
+    const existingNotice = await this.noticeRepository.findOne({
+      where: { id: noticeId },
+    });
+    if (!existingNotice) {
+      throw new Error('Notice not found');
+    }
+    const updatedNotice = { ...existingNotice, ...noticeData };
+    await this.noticeRepository.save(updatedNotice);
     return await this.noticeRepository.findOne({ where: { id: noticeId } });
   }
 
