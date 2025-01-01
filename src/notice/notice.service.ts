@@ -13,7 +13,8 @@ export class NoticeService {
 
   async create(noticeData: NoticeDto) {
     const newNotice = this.noticeRepository.create(noticeData);
-    return await this.noticeRepository.save(newNotice);
+    console.log(newNotice);
+    return newNotice;
   }
 
   async findOne(noticeId: number) {
