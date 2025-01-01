@@ -16,10 +16,10 @@ export class UploadController {
   @UseInterceptors(FileInterceptor('file'))
   async uploadImages(
     @Body() body: { noticeId: number },
-    @UploadedFile() files: Express.Multer.File[],
+    @UploadedFile() file: Express.Multer.File,
   ) {
     const { noticeId } = body;
-    const imageUrl = await this.uploadService.uploadImages(noticeId, files);
+    const imageUrl = await this.uploadService.uploadImages(noticeId, [file]);
     return { url: imageUrl };
   }
 }
