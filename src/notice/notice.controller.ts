@@ -14,6 +14,7 @@ import { NoticeDto } from './dto/notice.dto';
 export class NoticeController {
   constructor(private readonly noticeService: NoticeService) {}
 
+  // TODO: 업로드된 이미지 아이디도 추가
   @Post()
   createNotice(@Body() noticeData: NoticeDto) {
     return this.noticeService.create(noticeData);
