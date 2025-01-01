@@ -15,9 +15,10 @@ export class UploadController {
   @Post('images')
   @UseInterceptors(FileInterceptor('file'))
   async uploadImages(
-    @Body() noticeId: number,
+    @Body() body: { noticeId: number },
     @UploadedFile() files: Express.Multer.File[],
   ) {
+    const { noticeId } = body;
     const imageUrl = await this.uploadService.uploadImages(noticeId, files);
     return { url: imageUrl };
   }
