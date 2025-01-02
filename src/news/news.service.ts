@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { News } from '../entities/news.entity';
 import { NewsDto } from './dto/news.dto';
+import { format } from 'date-fns';
 
 @Injectable()
 export class NewsService {
@@ -21,11 +22,26 @@ export class NewsService {
   }
 
   async findOne(newsId: number) {
-    return await this.newsRepository.findOne({ where: { id: newsId } });
+    const news = await this.newsRepository.findOne({
+      where: { id: newsId },
+    });
+    if (news) {
+      return {
+        ...news,
+        createdAt: format(new Date(news.createdAt), 'yyyy MM dd'),
+        updatedAt: format(new Date(news.updatedAt), 'yyyy MM dd'),
+      };
+    }
+    return news;
   }
 
   async findAll() {
-    return await this.newsRepository.find();
+    const news = await this.newsRepository.find();
+    return news.map((news) => ({
+      ...news,
+      createdAt: format(new Date(news.createdAt), 'yyyy MM dd'),
+      updatedAt: format(new Date(news.updatedAt), 'yyyy MM dd'),
+    }));
   }
 
   async update(newsId: number, newsData: NewsDto) {

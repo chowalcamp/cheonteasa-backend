@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Notice } from '../entities/notice.entity';
 import { NoticeDto } from './dto/notice.dto';
+import { format } from 'date-fns';
 
 @Injectable()
 export class NoticeService {
@@ -12,8 +13,8 @@ export class NoticeService {
   ) {}
 
   async create(noticeData: NoticeDto) {
-    if (!noticeData.content) {
-      throw new Error('Content is required');
+    if (!noticeData.content || !noticeData.title) {
+      throw new Error('Content or title is required');
     }
     const notice = this.noticeRepository.create(noticeData);
     await this.noticeRepository.save(notice);
@@ -21,11 +22,26 @@ export class NoticeService {
   }
 
   async findOne(noticeId: number) {
-    return await this.noticeRepository.findOne({ where: { id: noticeId } });
+    const notice = await this.noticeRepository.findOne({
+      where: { id: noticeId },
+    });
+    if (notice) {
+      return {
+        ...notice,
+        createdAt: format(new Date(notice.createdAt), 'yyyy MM dd'),
+        updatedAt: format(new Date(notice.updatedAt), 'yyyy MM dd'),
+      };
+    }
+    return notice;
   }
 
   async findAll() {
-    return await this.noticeRepository.find();
+    const notices = await this.noticeRepository.find();
+    return notices.map((notice) => ({
+      ...notice,
+      createdAt: format(new Date(notice.createdAt), 'yyyy MM dd'),
+      updatedAt: format(new Date(notice.updatedAt), 'yyyy MM dd'),
+    }));
   }
 
   async update(noticeId: number, noticeData: NoticeDto) {
