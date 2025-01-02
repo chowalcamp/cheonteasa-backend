@@ -25,9 +25,7 @@ export class NoticeService {
   }
 
   async findAll() {
-    const notices = await this.noticeRepository.find();
-    console.log(notices); // 결과 확인
-    return notices;
+    return await this.noticeRepository.find();
   }
 
   async update(noticeId: number, noticeData: NoticeDto) {

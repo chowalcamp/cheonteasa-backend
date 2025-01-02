@@ -12,8 +12,12 @@ export class NewsService {
   ) {}
 
   async create(newsData: NewsDto) {
+    if (!newsData.content || !newsData.title) {
+      throw new Error('Content or title is required');
+    }
     const newNews = this.newsRepository.create(newsData);
-    return await this.newsRepository.save(newNews);
+    await this.newsRepository.save(newNews);
+    return newNews;
   }
 
   async findOne(newsId: number) {
@@ -25,7 +29,17 @@ export class NewsService {
   }
 
   async update(newsId: number, newsData: NewsDto) {
-    await this.newsRepository.update(newsId, newsData);
+    if (!newsData.content || !newsData.title) {
+      throw new Error('Content or title is required');
+    }
+    const existingNews = await this.newsRepository.findOne({
+      where: { id: newsId },
+    });
+    if (!existingNews) {
+      throw new Error('News not found');
+    }
+    const updatedNews = { ...existingNews, ...newsData };
+    await this.newsRepository.save(updatedNews);
     return await this.newsRepository.findOne({ where: { id: newsId } });
   }
 
@@ -33,6 +47,10 @@ export class NewsService {
     const news = await this.newsRepository.findOne({
       where: { id: newsId },
     });
-    await this.newsRepository.remove(news);
+    if (news) {
+      await this.newsRepository.remove(news);
+      return news;
+    }
+    return null;
   }
 }
