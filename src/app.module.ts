@@ -1,7 +1,12 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import * as dotenv from 'dotenv';
+import { UserModule } from './user/user.module';
+import { AuthModule } from './auth/auth.module';
+import { NoticeModule } from './notice/notice.module';
+import { UploadModule } from './upload/upload.module';
+import { NewsModule } from './news/news.modules';
+dotenv.config();
 
 @Module({
   imports: [
@@ -15,8 +20,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
     }),
+    UserModule,
+    AuthModule,
+    NoticeModule,
+    UploadModule,
+    NewsModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
 })
 export class AppModule {}
