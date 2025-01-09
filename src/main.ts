@@ -11,6 +11,9 @@ async function bootstrap() {
     origin: [
       'http://localhost:3000',
       'https://port-next-cheontaesa-m4h0qv5272cd3f9d.sel4.cloudtype.app',
+      'https://port-next-cheontaesa-m4h0qv5272cd3f9d.sel4.cloudtype.app',
+      'https://www.cheontaesa.com',
+      'https://cheontaesa.com',
     ], // 허용할 도메인 목록
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
