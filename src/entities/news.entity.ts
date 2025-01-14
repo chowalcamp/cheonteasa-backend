@@ -16,9 +16,6 @@ export class News {
   @Column('json', { nullable: true })
   content?: string;
 
-  @Column('json', { nullable: true })
-  images?: string[];
-
   @CreateDateColumn()
   createdAt: Date;
 
