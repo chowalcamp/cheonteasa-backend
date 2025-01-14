@@ -1,18 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import * as AWS from 'aws-sdk';
-import { Notice } from 'src/entities/notice.entity';
-import { Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class UploadService {
   private s3: AWS.S3;
 
-  constructor(
-    @InjectRepository(Notice)
-    private readonly noticeRepository: Repository<Notice>,
-  ) {
+  constructor() {
     this.s3 = new AWS.S3({
       accessKeyId: process.env.AWS_ACCESS_KEY_ID,
       secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
@@ -36,7 +30,6 @@ export class UploadService {
       const imageUrl = uploadResult.Location;
       imageUrls.push(imageUrl);
     }
-    await this.noticeRepository.save({ images: imageUrls });
     return imageUrls;
   }
 }
