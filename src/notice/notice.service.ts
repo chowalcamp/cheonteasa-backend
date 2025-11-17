@@ -25,11 +25,16 @@ export class NoticeService {
     const notice = await this.noticeRepository.findOne({
       where: { id: noticeId },
     });
+
     if (notice) {
+      // 조회수 증가
+      notice.viewCount = (notice.viewCount || 0) + 1;
+      await this.noticeRepository.save(notice);
+
       return {
         ...notice,
-        createdAt: format(new Date(notice.createdAt), 'yyyy MM dd'),
-        updatedAt: format(new Date(notice.updatedAt), 'yyyy MM dd'),
+        createdAt: format(new Date(notice.createdAt), 'yyyy.MM.dd'),
+        updatedAt: format(new Date(notice.updatedAt), 'yyyy.MM.dd'),
       };
     }
     return notice;
@@ -39,8 +44,22 @@ export class NoticeService {
     const notices = await this.noticeRepository.find();
     return notices.map((notice) => ({
       ...notice,
-      createdAt: format(new Date(notice.createdAt), 'yyyy MM dd'),
-      updatedAt: format(new Date(notice.updatedAt), 'yyyy MM dd'),
+      createdAt: format(new Date(notice.createdAt), 'yyyy.MM.dd'),
+      updatedAt: format(new Date(notice.updatedAt), 'yyyy.MM.dd'),
+    }));
+  }
+
+  async findRecent(limit: number = 3) {
+    const notices = await this.noticeRepository.find({
+      order: {
+        createdAt: 'DESC', // 최신순 정렬
+      },
+      take: limit, // 개수 제한
+    });
+    return notices.map((notice) => ({
+      ...notice,
+      createdAt: format(new Date(notice.createdAt), 'yyyy.MM.dd'),
+      updatedAt: format(new Date(notice.updatedAt), 'yyyy.MM.dd'),
     }));
   }
 

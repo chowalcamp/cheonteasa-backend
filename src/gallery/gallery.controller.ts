@@ -1,0 +1,106 @@
+import {
+  Controller,
+  Get,
+  Post,
+  Delete,
+  Body,
+  Param,
+  Put,
+} from '@nestjs/common';
+import { GalleryService } from './gallery.service';
+import { GalleryDto } from './dto/gallery.dto';
+import { Gallery } from '../entities/gallery.entity';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiParam,
+  ApiBody,
+} from '@nestjs/swagger';
+
+@ApiTags('gallery')
+@Controller('gallery')
+export class GalleryController {
+  constructor(private readonly galleryService: GalleryService) {}
+
+  @Post()
+  @ApiOperation({
+    summary: '갤러리 이미지 생성',
+    description: '새로운 갤러리 이미지를 등록합니다.',
+  })
+  @ApiBody({ type: GalleryDto })
+  @ApiResponse({
+    status: 201,
+    description: '갤러리 이미지가 성공적으로 생성되었습니다.',
+    type: Gallery,
+  })
+  @ApiResponse({ status: 400, description: '잘못된 요청입니다.' })
+  createGallery(@Body() galleryData: GalleryDto) {
+    return this.galleryService.create(galleryData);
+  }
+
+  @Get('list')
+  @ApiOperation({
+    summary: '전체 갤러리 이미지 조회',
+    description: '모든 갤러리 이미지 목록을 조회합니다. 최신순으로 정렬됩니다.',
+  })
+  @ApiResponse({
+    status: 200,
+    description: '갤러리 목록 조회 성공',
+    type: [Gallery],
+  })
+  getList() {
+    return this.galleryService.findAll();
+  }
+
+  @Get(':id')
+  @ApiOperation({
+    summary: '특정 갤러리 이미지 조회',
+    description: 'ID로 특정 갤러리 이미지를 조회합니다.',
+  })
+  @ApiParam({ name: 'id', description: '갤러리 ID', type: 'number' })
+  @ApiResponse({
+    status: 200,
+    description: '갤러리 조회 성공',
+    type: Gallery,
+  })
+  @ApiResponse({ status: 404, description: '갤러리를 찾을 수 없습니다.' })
+  getGallery(@Param('id') galleryId: number) {
+    return this.galleryService.findOne(galleryId);
+  }
+
+  @Put(':id')
+  @ApiOperation({
+    summary: '갤러리 이미지 수정',
+    description: '기존 갤러리 이미지를 수정합니다.',
+  })
+  @ApiParam({ name: 'id', description: '갤러리 ID', type: 'number' })
+  @ApiBody({ type: GalleryDto })
+  @ApiResponse({
+    status: 200,
+    description: '갤러리가 성공적으로 수정되었습니다.',
+    type: Gallery,
+  })
+  @ApiResponse({ status: 404, description: '갤러리를 찾을 수 없습니다.' })
+  updateGallery(
+    @Param('id') galleryId: number,
+    @Body() galleryData: GalleryDto,
+  ) {
+    return this.galleryService.update(galleryId, galleryData);
+  }
+
+  @Delete(':id')
+  @ApiOperation({
+    summary: '갤러리 이미지 삭제',
+    description: '갤러리 이미지를 삭제합니다.',
+  })
+  @ApiParam({ name: 'id', description: '갤러리 ID', type: 'number' })
+  @ApiResponse({
+    status: 200,
+    description: '갤러리가 성공적으로 삭제되었습니다.',
+  })
+  @ApiResponse({ status: 404, description: '갤러리를 찾을 수 없습니다.' })
+  deleteGallery(@Param('id') galleryId: number) {
+    return this.galleryService.remove(galleryId);
+  }
+}

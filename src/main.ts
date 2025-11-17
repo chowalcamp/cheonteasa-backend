@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import * as cookieParser from 'cookie-parser';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -18,6 +19,26 @@ async function bootstrap() {
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
   });
+
+  // Swagger 설정
+  const config = new DocumentBuilder()
+    .setTitle('청태사 Backend API')
+    .setDescription('청태사 백엔드 API 문서입니다.')
+    .setVersion('1.0')
+    .addTag('auth', '인증 관련 API')
+    .addTag('news', '뉴스 관련 API')
+    .addTag('notice', '공지사항 관련 API')
+    .addTag('upload', '파일 업로드 관련 API')
+    .addTag('users', '사용자 관련 API')
+    .addCookieAuth('authToken', {
+      type: 'apiKey',
+      in: 'cookie',
+      name: 'authToken',
+    })
+    .build();
+
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api', app, document);
 
   await app.listen(3000);
 }
