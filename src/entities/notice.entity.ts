@@ -2,10 +2,14 @@ import {
   Entity,
   Column,
   PrimaryGeneratedColumn,
-  CreateDateColumn,
-  UpdateDateColumn,
+  ManyToOne,
+  ManyToMany,
+  JoinColumn,
+  JoinTable,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
+import { User } from './user.entity';
+import { Gallery } from './gallery.entity';
 
 @Entity()
 export class Notice {
@@ -17,32 +21,32 @@ export class Notice {
   id: number;
 
   @ApiProperty({
+    description: '사용자 ID',
+    example: 1,
+  })
+  @Column()
+  userId: number;
+
+  @ApiProperty({
     description: '공지사항 제목',
     example: '2025년 새해 특별기도 안내',
   })
-  @Column({ nullable: true })
-  title?: string;
+  @Column()
+  title: string;
 
   @ApiProperty({
     description: '공지사항 내용',
     example: '새해를 맞이하여 천태사에서 특별기도를 진행합니다.',
   })
-  @Column('text', { nullable: true })
-  content?: string;
+  @Column('text')
+  content: string;
 
   @ApiProperty({
     description: '카테고리',
     example: '공지사항',
   })
-  @Column({ nullable: true, default: '공지사항' })
+  @Column({ length: 100, nullable: true })
   category?: string;
-
-  @ApiProperty({
-    description: '작성자',
-    example: '천태사 관리자',
-  })
-  @Column({ nullable: true, default: '천태사 관리자' })
-  author?: string;
 
   @ApiProperty({
     description: '조회수',
@@ -52,25 +56,17 @@ export class Notice {
   viewCount: number;
 
   @ApiProperty({
-    description: '이미지 URL 배열',
-    example: ['https://s3.amazonaws.com/image1.jpg'],
-    type: [String],
-  })
-  @Column('simple-array', { nullable: true })
-  images?: string[];
-
-  @ApiProperty({
     description: '생성일',
     example: '2025-01-15T00:00:00.000Z',
   })
-  @CreateDateColumn()
+  @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
 
   @ApiProperty({
     description: '수정일',
     example: '2025-01-15T00:00:00.000Z',
   })
-  @UpdateDateColumn()
+  @Column({ type: 'datetime', nullable: true })
   updatedAt: Date;
 
   @ApiProperty({
@@ -78,6 +74,19 @@ export class Notice {
     example: null,
     required: false,
   })
-  @Column({ nullable: true })
+  @Column({ type: 'datetime', nullable: true })
   deletedAt: Date;
+
+  // 관계 설정
+  @ManyToOne(() => User, (user) => user.notices)
+  @JoinColumn({ name: 'userId' })
+  user: User;
+
+  @ManyToMany(() => Gallery, (gallery) => gallery.notices)
+  @JoinTable({
+    name: 'notice_gallery',
+    joinColumn: { name: 'noticeId', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'galleryId', referencedColumnName: 'id' },
+  })
+  galleries: Gallery[];
 }

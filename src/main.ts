@@ -11,6 +11,7 @@ async function bootstrap() {
   app.enableCors({
     origin: [
       'http://localhost:3000',
+      'http://localhost:3001',
       'https://port-next-cheontaesa-m4h0qv5272cd3f9d.sel4.cloudtype.app',
       'https://port-next-cheontaesa-m4h0qv5272cd3f9d.sel4.cloudtype.app',
       'https://www.cheontaesa.com',
@@ -30,6 +31,7 @@ async function bootstrap() {
     .addTag('notice', '공지사항 관련 API')
     .addTag('upload', '파일 업로드 관련 API')
     .addTag('users', '사용자 관련 API')
+    .addTag('gallery', '갤러리 관련 API')
     .addCookieAuth('authToken', {
       type: 'apiKey',
       in: 'cookie',

@@ -2,11 +2,18 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class GalleryDto {
   @ApiProperty({
-    description: '이미지 이름',
-    example: '청태사 대웅전',
+    description: '사용자 ID',
+    example: 1,
     required: true,
   })
-  imageName: string;
+  userId: number;
+
+  @ApiProperty({
+    description: '이미지 이름',
+    example: '청태사 대웅전',
+    required: false,
+  })
+  imageName?: string;
 
   @ApiProperty({
     description: '이미지 설명',

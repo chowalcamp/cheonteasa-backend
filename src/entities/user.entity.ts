@@ -1,19 +1,23 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
-
-enum UserRole {
-  ADMIN = 'admin',
-  USER = 'user',
-}
+import { Gallery } from './gallery.entity';
+import { Notice } from './notice.entity';
 
 @Entity()
 export class User {
   @ApiProperty({
     description: '사용자 고유 ID',
-    example: '123e4567-e89b-12d3-a456-426614174000',
+    example: 1,
   })
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @ApiProperty({
+    description: '이메일',
+    example: 'user@example.com',
+  })
+  @Column({ unique: true })
+  email: string;
 
   @ApiProperty({
     description: '사용자 이름',
@@ -32,34 +36,37 @@ export class User {
 
   @ApiProperty({
     description: '사용자 권한',
-    enum: UserRole,
-    example: UserRole.USER,
+    example: 'MEMBER',
   })
-  @Column({
-    type: 'enum',
-    enum: UserRole,
-    default: UserRole.USER,
-  })
-  role: UserRole;
+  @Column({ length: 50, default: 'MEMBER' })
+  role: string;
 
   @ApiProperty({
     description: '생성일',
     example: '2024-01-01T00:00:00.000Z',
   })
-  @Column()
+  @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
 
   @ApiProperty({
     description: '수정일',
     example: '2024-01-01T00:00:00.000Z',
   })
-  @Column()
+  @Column({ type: 'datetime', nullable: true })
   updatedAt: Date;
 
   @ApiProperty({
     description: '삭제일',
-    example: '2024-01-01T00:00:00.000Z',
+    example: null,
+    required: false,
   })
-  @Column()
+  @Column({ type: 'datetime', nullable: true })
   deletedAt: Date;
+
+  // 관계 설정
+  @OneToMany(() => Gallery, (gallery) => gallery.user)
+  galleries: Gallery[];
+
+  @OneToMany(() => Notice, (notice) => notice.user)
+  notices: Notice[];
 }

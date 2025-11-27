@@ -13,8 +13,8 @@ export class GalleryService {
   ) {}
 
   async create(galleryData: GalleryDto) {
-    if (!galleryData.imageName || !galleryData.imageUrl) {
-      throw new Error('Image name and URL are required');
+    if (!galleryData.imageUrl || !galleryData.userId) {
+      throw new Error('userId and imageUrl are required');
     }
     const gallery = this.galleryRepository.create(galleryData);
     await this.galleryRepository.save(gallery);
@@ -24,6 +24,7 @@ export class GalleryService {
   async findOne(galleryId: number) {
     const gallery = await this.galleryRepository.findOne({
       where: { id: galleryId },
+      relations: ['user'],
     });
 
     if (gallery) {
@@ -38,6 +39,7 @@ export class GalleryService {
 
   async findAll() {
     const galleries = await this.galleryRepository.find({
+      relations: ['user'],
       order: {
         createdAt: 'DESC', // 최신순 정렬
       },

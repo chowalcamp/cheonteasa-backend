@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Notice } from '../entities/notice.entity';
+import { Gallery } from '../entities/gallery.entity';
 import { NoticeDto } from './dto/notice.dto';
 import { format } from 'date-fns';
 
@@ -10,20 +11,40 @@ export class NoticeService {
   constructor(
     @InjectRepository(Notice)
     private readonly noticeRepository: Repository<Notice>,
+    @InjectRepository(Gallery)
+    private readonly galleryRepository: Repository<Gallery>,
   ) {}
 
   async create(noticeData: NoticeDto) {
-    if (!noticeData.content || !noticeData.title) {
-      throw new Error('Content or title is required');
+    if (!noticeData.content || !noticeData.title || !noticeData.userId) {
+      throw new Error('userId, title, and content are required');
     }
-    const notice = this.noticeRepository.create(noticeData);
-    await this.noticeRepository.save(notice);
-    return notice;
+
+    const notice = this.noticeRepository.create({
+      userId: noticeData.userId,
+      title: noticeData.title,
+      content: noticeData.content,
+      category: noticeData.category,
+    });
+
+    const savedNotice = await this.noticeRepository.save(notice);
+
+    // 갤러리 이미지 연결
+    if (noticeData.galleryIds && noticeData.galleryIds.length > 0) {
+      const galleries = await this.galleryRepository.findByIds(
+        noticeData.galleryIds,
+      );
+      savedNotice.galleries = galleries;
+      await this.noticeRepository.save(savedNotice);
+    }
+
+    return savedNotice;
   }
 
   async findOne(noticeId: number) {
     const notice = await this.noticeRepository.findOne({
       where: { id: noticeId },
+      relations: ['user', 'galleries'],
     });
 
     if (notice) {
@@ -41,7 +62,9 @@ export class NoticeService {
   }
 
   async findAll() {
-    const notices = await this.noticeRepository.find();
+    const notices = await this.noticeRepository.find({
+      relations: ['user', 'galleries'],
+    });
     return notices.map((notice) => ({
       ...notice,
       createdAt: format(new Date(notice.createdAt), 'yyyy.MM.dd'),
@@ -51,6 +74,7 @@ export class NoticeService {
 
   async findRecent(limit: number = 3) {
     const notices = await this.noticeRepository.find({
+      relations: ['user', 'galleries'],
       order: {
         createdAt: 'DESC', // 최신순 정렬
       },
@@ -66,17 +90,36 @@ export class NoticeService {
   async update(noticeId: number, noticeData: NoticeDto) {
     console.log('Updating Notice:', noticeId, noticeData);
     if (!noticeData.content || !noticeData.title) {
-      throw new Error('Content or title are required');
+      throw new Error('Content and title are required');
     }
     const existingNotice = await this.noticeRepository.findOne({
       where: { id: noticeId },
+      relations: ['galleries'],
     });
     if (!existingNotice) {
       throw new Error('Notice not found');
     }
-    const updatedNotice = { ...existingNotice, ...noticeData };
-    await this.noticeRepository.save(updatedNotice);
-    return await this.noticeRepository.findOne({ where: { id: noticeId } });
+
+    // 기본 필드 업데이트
+    existingNotice.title = noticeData.title;
+    existingNotice.content = noticeData.content;
+    if (noticeData.category) {
+      existingNotice.category = noticeData.category;
+    }
+
+    // 갤러리 이미지 업데이트
+    if (noticeData.galleryIds) {
+      const galleries = await this.galleryRepository.findByIds(
+        noticeData.galleryIds,
+      );
+      existingNotice.galleries = galleries;
+    }
+
+    await this.noticeRepository.save(existingNotice);
+    return await this.noticeRepository.findOne({
+      where: { id: noticeId },
+      relations: ['user', 'galleries'],
+    });
   }
 
   async remove(noticeId: number) {
