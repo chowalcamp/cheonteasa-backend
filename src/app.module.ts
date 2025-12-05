@@ -20,6 +20,7 @@ dotenv.config();
       database: process.env.DB_DATABASE,
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
+      dropSchema: true, // 🚨 개발 환경에서만! 모든 테이블 삭제 후 재생성
     }),
     UserModule,
     AuthModule,
