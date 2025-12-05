@@ -6,7 +6,6 @@ import {
   Body,
   Param,
   Put,
-  UseGuards,
 } from '@nestjs/common';
 import { GalleryService } from './gallery.service';
 import { GalleryDto } from './dto/gallery.dto';
@@ -19,14 +18,10 @@ import {
   ApiBody,
   ApiBearerAuth,
 } from '@nestjs/swagger';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { RolesGuard } from '../auth/guards/roles.guard';
-import { Public } from '../auth/decorators/public.decorator';
 import { Roles } from '../auth/decorators/roles.decorator';
 
 @ApiTags('gallery')
 @Controller('gallery')
-@UseGuards(JwtAuthGuard, RolesGuard)
 export class GalleryController {
   constructor(private readonly galleryService: GalleryService) {}
 
@@ -49,11 +44,10 @@ export class GalleryController {
     return this.galleryService.create(galleryData);
   }
 
-  @Public()
   @Get('list')
   @ApiOperation({
     summary: '전체 갤러리 이미지 조회',
-    description: '모든 갤러리 이미지 목록을 조회합니다. 최신순으로 정렬됩니다.',
+    description: '모든 갤러리 이미지 목록을 조회합니다. 최신순으로 정렬됩니다. (인증 불필요)',
   })
   @ApiResponse({
     status: 200,
@@ -64,11 +58,10 @@ export class GalleryController {
     return this.galleryService.findAll();
   }
 
-  @Public()
   @Get(':id')
   @ApiOperation({
     summary: '특정 갤러리 이미지 조회',
-    description: 'ID로 특정 갤러리 이미지를 조회합니다.',
+    description: 'ID로 특정 갤러리 이미지를 조회합니다. (인증 불필요)',
   })
   @ApiParam({ name: 'id', description: '갤러리 ID', type: 'number' })
   @ApiResponse({

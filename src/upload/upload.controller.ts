@@ -3,7 +3,6 @@ import {
   Post,
   UseInterceptors,
   UploadedFile,
-  UseGuards,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UploadService } from './upload.service';
@@ -15,13 +14,10 @@ import {
   ApiResponse,
   ApiBearerAuth,
 } from '@nestjs/swagger';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
 
 @ApiTags('upload')
 @Controller('upload')
-@UseGuards(JwtAuthGuard, RolesGuard)
 export class UploadController {
   constructor(private readonly uploadService: UploadService) {}
 

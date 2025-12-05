@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Delete, Body, Param, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Delete, Body, Param } from '@nestjs/common';
 import { NoticeService } from './notice.service';
 import { NoticeDto } from './dto/notice.dto';
 import { Notice } from '../entities/notice.entity';
@@ -10,14 +10,10 @@ import {
   ApiBody,
   ApiBearerAuth,
 } from '@nestjs/swagger';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { RolesGuard } from '../auth/guards/roles.guard';
-import { Public } from '../auth/decorators/public.decorator';
 import { Roles } from '../auth/decorators/roles.decorator';
 
 @ApiTags('notice')
 @Controller('notice')
-@UseGuards(JwtAuthGuard, RolesGuard)
 export class NoticeController {
   constructor(private readonly noticeService: NoticeService) {}
 
@@ -41,11 +37,10 @@ export class NoticeController {
     return this.noticeService.create(noticeData);
   }
 
-  @Public()
   @Get()
   @ApiOperation({
     summary: '전체 공지사항 조회',
-    description: '모든 공지사항 목록을 조회합니다.',
+    description: '모든 공지사항 목록을 조회합니다. (인증 불필요)',
   })
   @ApiResponse({
     status: 200,
@@ -56,12 +51,11 @@ export class NoticeController {
     return this.noticeService.findAll();
   }
 
-  @Public()
   @Get('recent')
   @ApiOperation({
     summary: '최근 공지사항 3개 조회',
     description:
-      '최신 공지사항 3개를 조회합니다. 생성일 기준 내림차순 정렬됩니다.',
+      '최신 공지사항 3개를 조회합니다. 생성일 기준 내림차순 정렬됩니다. (인증 불필요)',
   })
   @ApiResponse({
     status: 200,
@@ -72,12 +66,11 @@ export class NoticeController {
     return this.noticeService.findRecent(3);
   }
 
-  @Public()
   @Get(':id')
   @ApiOperation({
     summary: '특정 공지사항 조회',
     description:
-      'ID로 특정 공지사항을 조회합니다. 조회 시 자동으로 조회수가 증가합니다.',
+      'ID로 특정 공지사항을 조회합니다. 조회 시 자동으로 조회수가 증가합니다. (인증 불필요)',
   })
   @ApiParam({ name: 'id', description: '공지사항 ID', type: 'number' })
   @ApiResponse({

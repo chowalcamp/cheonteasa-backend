@@ -1,11 +1,11 @@
-import { Controller, Post, Body, Res, Get, HttpCode, UseGuards } from '@nestjs/common';
+import { Controller, Post, Body, Res, Get, HttpCode } from '@nestjs/common';
 import { Response } from 'express';
 import { AuthService } from './auth.service';
 import { ApiTags, ApiOperation, ApiBody, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { Public } from './decorators/public.decorator';
-import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { RequireAuth } from './decorators/require-auth.decorator';
 import { CurrentUser } from './decorators/current-user.decorator';
 
 @ApiTags('auth')
@@ -83,12 +83,12 @@ export class AuthController {
     return { message: '로그아웃 성공' };
   }
 
-  @UseGuards(JwtAuthGuard)
+  @RequireAuth()
   @Get('me')
   @ApiBearerAuth()
   @ApiOperation({
-    summary: '내 정보 조회',
-    description: '현재 로그인한 사용자의 정보를 조회합니다.',
+    summary: '내 정보 조회 (인증 필요)',
+    description: '현재 로그인한 사용자의 정보를 조회합니다. GET 요청이지만 인증이 필요합니다.',
   })
   @ApiResponse({ status: 200, description: '사용자 정보 조회 성공' })
   @ApiResponse({ status: 401, description: '인증되지 않은 사용자' })

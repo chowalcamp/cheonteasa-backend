@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Delete, Body, Param, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Delete, Body, Param } from '@nestjs/common';
 import { NewsService } from './news.service';
 import { NewsDto } from './dto/news.dto';
 import {
@@ -9,14 +9,10 @@ import {
   ApiBody,
   ApiBearerAuth,
 } from '@nestjs/swagger';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { RolesGuard } from '../auth/guards/roles.guard';
-import { Public } from '../auth/decorators/public.decorator';
 import { Roles } from '../auth/decorators/roles.decorator';
 
 @ApiTags('news')
 @Controller('news')
-@UseGuards(JwtAuthGuard, RolesGuard)
 export class NewsController {
   constructor(private readonly newsService: NewsService) {}
 
@@ -39,22 +35,20 @@ export class NewsController {
     return this.newsService.create(newsData);
   }
 
-  @Public()
   @Get()
   @ApiOperation({
     summary: '전체 뉴스 조회',
-    description: '모든 뉴스 목록을 조회합니다.',
+    description: '모든 뉴스 목록을 조회합니다. (인증 불필요)',
   })
   @ApiResponse({ status: 200, description: '뉴스 목록 조회 성공' })
   getNews() {
     return this.newsService.findAll();
   }
 
-  @Public()
   @Get(':id')
   @ApiOperation({
     summary: '특정 뉴스 조회',
-    description: 'ID로 특정 뉴스를 조회합니다.',
+    description: 'ID로 특정 뉴스를 조회합니다. (인증 불필요)',
   })
   @ApiParam({ name: 'id', description: '뉴스 ID', type: 'number' })
   @ApiResponse({ status: 200, description: '뉴스 조회 성공' })
