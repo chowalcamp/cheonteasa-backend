@@ -20,7 +20,7 @@ dotenv.config();
       database: process.env.DB_DATABASE,
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
-      // dropSchema는 1회 실행 후 제거됨 (UUID 스키마 재생성 완료)
+      dropSchema: true, // 🔥 다시 활성화: username, password, email 필드 누락 수정
     }),
     UserModule,
     AuthModule,
