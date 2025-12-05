@@ -6,6 +6,7 @@ import {
   Body,
   Param,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { GalleryService } from './gallery.service';
 import { GalleryDto } from './dto/gallery.dto';
@@ -16,17 +17,25 @@ import {
   ApiResponse,
   ApiParam,
   ApiBody,
+  ApiBearerAuth,
 } from '@nestjs/swagger';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { RolesGuard } from '../auth/guards/roles.guard';
+import { Public } from '../auth/decorators/public.decorator';
+import { Roles } from '../auth/decorators/roles.decorator';
 
 @ApiTags('gallery')
 @Controller('gallery')
+@UseGuards(JwtAuthGuard, RolesGuard)
 export class GalleryController {
   constructor(private readonly galleryService: GalleryService) {}
 
+  @Roles('ADMIN', 'MEMBER')
+  @ApiBearerAuth()
   @Post()
   @ApiOperation({
-    summary: '갤러리 이미지 생성',
-    description: '새로운 갤러리 이미지를 등록합니다.',
+    summary: '갤러리 이미지 생성 (로그인 필요)',
+    description: '새로운 갤러리 이미지를 등록합니다. 로그인한 사용자만 사용 가능합니다.',
   })
   @ApiBody({ type: GalleryDto })
   @ApiResponse({
@@ -35,10 +44,12 @@ export class GalleryController {
     type: Gallery,
   })
   @ApiResponse({ status: 400, description: '잘못된 요청입니다.' })
+  @ApiResponse({ status: 401, description: '인증되지 않은 사용자' })
   createGallery(@Body() galleryData: GalleryDto) {
     return this.galleryService.create(galleryData);
   }
 
+  @Public()
   @Get('list')
   @ApiOperation({
     summary: '전체 갤러리 이미지 조회',
@@ -53,6 +64,7 @@ export class GalleryController {
     return this.galleryService.findAll();
   }
 
+  @Public()
   @Get(':id')
   @ApiOperation({
     summary: '특정 갤러리 이미지 조회',
@@ -69,10 +81,12 @@ export class GalleryController {
     return this.galleryService.findOne(galleryId);
   }
 
+  @Roles('ADMIN', 'MEMBER')
+  @ApiBearerAuth()
   @Put(':id')
   @ApiOperation({
-    summary: '갤러리 이미지 수정',
-    description: '기존 갤러리 이미지를 수정합니다.',
+    summary: '갤러리 이미지 수정 (로그인 필요)',
+    description: '기존 갤러리 이미지를 수정합니다. 로그인한 사용자만 사용 가능합니다.',
   })
   @ApiParam({ name: 'id', description: '갤러리 ID', type: 'number' })
   @ApiBody({ type: GalleryDto })
@@ -82,6 +96,7 @@ export class GalleryController {
     type: Gallery,
   })
   @ApiResponse({ status: 404, description: '갤러리를 찾을 수 없습니다.' })
+  @ApiResponse({ status: 401, description: '인증되지 않은 사용자' })
   updateGallery(
     @Param('id') galleryId: number,
     @Body() galleryData: GalleryDto,
@@ -89,10 +104,12 @@ export class GalleryController {
     return this.galleryService.update(galleryId, galleryData);
   }
 
+  @Roles('ADMIN')
+  @ApiBearerAuth()
   @Delete(':id')
   @ApiOperation({
-    summary: '갤러리 이미지 삭제',
-    description: '갤러리 이미지를 삭제합니다.',
+    summary: '갤러리 이미지 삭제 (관리자 전용)',
+    description: '갤러리 이미지를 삭제합니다. 관리자만 사용 가능합니다.',
   })
   @ApiParam({ name: 'id', description: '갤러리 ID', type: 'number' })
   @ApiResponse({
@@ -100,6 +117,8 @@ export class GalleryController {
     description: '갤러리가 성공적으로 삭제되었습니다.',
   })
   @ApiResponse({ status: 404, description: '갤러리를 찾을 수 없습니다.' })
+  @ApiResponse({ status: 401, description: '인증되지 않은 사용자' })
+  @ApiResponse({ status: 403, description: '권한이 없습니다.' })
   deleteGallery(@Param('id') galleryId: number) {
     return this.galleryService.remove(galleryId);
   }

@@ -2,6 +2,7 @@ import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { Gallery } from './gallery.entity';
 import { Notice } from './notice.entity';
+import { Exclude } from 'class-transformer';
 
 @Entity()
 export class User {
@@ -13,11 +14,27 @@ export class User {
   id: number;
 
   @ApiProperty({
-    description: '이메일',
-    example: 'user@example.com',
+    description: '사용자 아이디 (로그인용)',
+    example: 'admin',
   })
   @Column({ unique: true })
-  email: string;
+  username: string;
+
+  @ApiProperty({
+    description: '비밀번호',
+    example: 'password123',
+  })
+  @Column()
+  @Exclude() // 응답에서 비밀번호 제외
+  password: string;
+
+  @ApiProperty({
+    description: '이메일',
+    example: 'user@example.com',
+    required: false,
+  })
+  @Column({ unique: true, nullable: true })
+  email?: string;
 
   @ApiProperty({
     description: '사용자 이름',

@@ -22,10 +22,9 @@ export class Gallery {
   @ApiProperty({
     description: '사용자 ID',
     example: 1,
-    required: false,
   })
-  @Column({ nullable: true })
-  userId?: number;
+  @Column()
+  userId: number;
 
   @ApiProperty({
     description: '이미지 이름',

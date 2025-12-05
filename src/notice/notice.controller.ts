@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Delete, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post, Delete, Body, Param, UseGuards } from '@nestjs/common';
 import { NoticeService } from './notice.service';
 import { NoticeDto } from './dto/notice.dto';
 import { Notice } from '../entities/notice.entity';
@@ -8,18 +8,26 @@ import {
   ApiResponse,
   ApiParam,
   ApiBody,
+  ApiBearerAuth,
 } from '@nestjs/swagger';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { RolesGuard } from '../auth/guards/roles.guard';
+import { Public } from '../auth/decorators/public.decorator';
+import { Roles } from '../auth/decorators/roles.decorator';
 
 @ApiTags('notice')
 @Controller('notice')
+@UseGuards(JwtAuthGuard, RolesGuard)
 export class NoticeController {
   constructor(private readonly noticeService: NoticeService) {}
 
+  @Roles('ADMIN', 'MEMBER')
+  @ApiBearerAuth()
   @Post()
   @ApiOperation({
-    summary: '공지사항 생성',
+    summary: '공지사항 생성 (로그인 필요)',
     description:
-      '새로운 공지사항을 생성합니다. 향후 업로드된 이미지 ID도 추가될 예정입니다.',
+      '새로운 공지사항을 생성합니다. 로그인한 사용자만 사용 가능합니다.',
   })
   @ApiBody({ type: NoticeDto })
   @ApiResponse({
@@ -28,10 +36,12 @@ export class NoticeController {
     type: Notice,
   })
   @ApiResponse({ status: 400, description: '잘못된 요청입니다.' })
+  @ApiResponse({ status: 401, description: '인증되지 않은 사용자' })
   createNotice(@Body() noticeData: NoticeDto) {
     return this.noticeService.create(noticeData);
   }
 
+  @Public()
   @Get()
   @ApiOperation({
     summary: '전체 공지사항 조회',
@@ -46,6 +56,7 @@ export class NoticeController {
     return this.noticeService.findAll();
   }
 
+  @Public()
   @Get('recent')
   @ApiOperation({
     summary: '최근 공지사항 3개 조회',
@@ -61,6 +72,7 @@ export class NoticeController {
     return this.noticeService.findRecent(3);
   }
 
+  @Public()
   @Get(':id')
   @ApiOperation({
     summary: '특정 공지사항 조회',
@@ -78,10 +90,12 @@ export class NoticeController {
     return this.noticeService.findOne(noticeId);
   }
 
+  @Roles('ADMIN', 'MEMBER')
+  @ApiBearerAuth()
   @Post('/update/:id')
   @ApiOperation({
-    summary: '공지사항 수정',
-    description: '기존 공지사항을 수정합니다.',
+    summary: '공지사항 수정 (로그인 필요)',
+    description: '기존 공지사항을 수정합니다. 로그인한 사용자만 사용 가능합니다.',
   })
   @ApiParam({ name: 'id', description: '공지사항 ID', type: 'number' })
   @ApiBody({ type: NoticeDto })
@@ -91,15 +105,18 @@ export class NoticeController {
     type: Notice,
   })
   @ApiResponse({ status: 404, description: '공지사항을 찾을 수 없습니다.' })
+  @ApiResponse({ status: 401, description: '인증되지 않은 사용자' })
   updateNotice(@Param('id') noticeId: number, @Body() noticeData: NoticeDto) {
     console.log('Received update request for notice:', noticeId);
     return this.noticeService.update(noticeId, noticeData);
   }
 
+  @Roles('ADMIN')
+  @ApiBearerAuth()
   @Delete(':id')
   @ApiOperation({
-    summary: '공지사항 삭제',
-    description: '공지사항을 삭제합니다.',
+    summary: '공지사항 삭제 (관리자 전용)',
+    description: '공지사항을 삭제합니다. 관리자만 사용 가능합니다.',
   })
   @ApiParam({ name: 'id', description: '공지사항 ID', type: 'number' })
   @ApiResponse({
@@ -107,6 +124,8 @@ export class NoticeController {
     description: '공지사항이 성공적으로 삭제되었습니다.',
   })
   @ApiResponse({ status: 404, description: '공지사항을 찾을 수 없습니다.' })
+  @ApiResponse({ status: 401, description: '인증되지 않은 사용자' })
+  @ApiResponse({ status: 403, description: '권한이 없습니다.' })
   deleteNotice(@Param('id') noticeId: number) {
     return this.noticeService.remove(noticeId);
   }

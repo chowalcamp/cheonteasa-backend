@@ -16,7 +16,10 @@ export class NoticeService {
   ) {}
 
   async create(noticeData: NoticeDto) {
-    // Validation은 DTO의 class-validator가 처리
+    if (!noticeData.content || !noticeData.title || !noticeData.userId) {
+      throw new Error('userId, title, and content are required');
+    }
+
     const notice = this.noticeRepository.create({
       userId: noticeData.userId,
       title: noticeData.title,
@@ -86,7 +89,9 @@ export class NoticeService {
 
   async update(noticeId: number, noticeData: NoticeDto) {
     console.log('Updating Notice:', noticeId, noticeData);
-    // Validation은 DTO의 class-validator가 처리
+    if (!noticeData.content || !noticeData.title) {
+      throw new Error('Content and title are required');
+    }
     const existingNotice = await this.noticeRepository.findOne({
       where: { id: noticeId },
       relations: ['galleries'],
@@ -98,10 +103,7 @@ export class NoticeService {
     // 기본 필드 업데이트
     existingNotice.title = noticeData.title;
     existingNotice.content = noticeData.content;
-    if (noticeData.userId !== undefined) {
-      existingNotice.userId = noticeData.userId;
-    }
-    if (noticeData.category !== undefined) {
+    if (noticeData.category) {
       existingNotice.category = noticeData.category;
     }
 

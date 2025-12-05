@@ -23,10 +23,9 @@ export class Notice {
   @ApiProperty({
     description: '사용자 ID',
     example: 1,
-    required: false,
   })
-  @Column({ nullable: true })
-  userId?: number;
+  @Column()
+  userId: number;
 
   @ApiProperty({
     description: '공지사항 제목',
