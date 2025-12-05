@@ -72,14 +72,14 @@ export class NoticeController {
     description:
       'ID로 특정 공지사항을 조회합니다. 조회 시 자동으로 조회수가 증가합니다. (인증 불필요)',
   })
-  @ApiParam({ name: 'id', description: '공지사항 ID', type: 'number' })
+  @ApiParam({ name: 'id', description: '공지사항 ID', type: 'string' })
   @ApiResponse({
     status: 200,
     description: '공지사항 조회 성공',
     type: Notice,
   })
   @ApiResponse({ status: 404, description: '공지사항을 찾을 수 없습니다.' })
-  getNotice(@Param('id') noticeId: number) {
+  getNotice(@Param('id') noticeId: string) {
     return this.noticeService.findOne(noticeId);
   }
 
@@ -88,9 +88,10 @@ export class NoticeController {
   @Post('/update/:id')
   @ApiOperation({
     summary: '공지사항 수정 (로그인 필요)',
-    description: '기존 공지사항을 수정합니다. 로그인한 사용자만 사용 가능합니다.',
+    description:
+      '기존 공지사항을 수정합니다. 로그인한 사용자만 사용 가능합니다.',
   })
-  @ApiParam({ name: 'id', description: '공지사항 ID', type: 'number' })
+  @ApiParam({ name: 'id', description: '공지사항 ID', type: 'string' })
   @ApiBody({ type: NoticeDto })
   @ApiResponse({
     status: 200,
@@ -99,7 +100,7 @@ export class NoticeController {
   })
   @ApiResponse({ status: 404, description: '공지사항을 찾을 수 없습니다.' })
   @ApiResponse({ status: 401, description: '인증되지 않은 사용자' })
-  updateNotice(@Param('id') noticeId: number, @Body() noticeData: NoticeDto) {
+  updateNotice(@Param('id') noticeId: string, @Body() noticeData: NoticeDto) {
     console.log('Received update request for notice:', noticeId);
     return this.noticeService.update(noticeId, noticeData);
   }
@@ -111,7 +112,7 @@ export class NoticeController {
     summary: '공지사항 삭제 (관리자 전용)',
     description: '공지사항을 삭제합니다. 관리자만 사용 가능합니다.',
   })
-  @ApiParam({ name: 'id', description: '공지사항 ID', type: 'number' })
+  @ApiParam({ name: 'id', description: '공지사항 ID', type: 'string' })
   @ApiResponse({
     status: 200,
     description: '공지사항이 성공적으로 삭제되었습니다.',
@@ -119,7 +120,7 @@ export class NoticeController {
   @ApiResponse({ status: 404, description: '공지사항을 찾을 수 없습니다.' })
   @ApiResponse({ status: 401, description: '인증되지 않은 사용자' })
   @ApiResponse({ status: 403, description: '권한이 없습니다.' })
-  deleteNotice(@Param('id') noticeId: number) {
+  deleteNotice(@Param('id') noticeId: string) {
     return this.noticeService.remove(noticeId);
   }
 }

@@ -8,10 +8,10 @@ import { Exclude } from 'class-transformer';
 export class User {
   @ApiProperty({
     description: '사용자 고유 ID',
-    example: 1,
+    example: '550e8400-e29b-41d4-a716-446655440000',
   })
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @ApiProperty({
     description: '사용자 아이디 (로그인용)',

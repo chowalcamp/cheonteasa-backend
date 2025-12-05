@@ -1,21 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsNotEmpty,
-  IsNumber,
-  IsString,
-  IsOptional,
-  IsUrl,
-} from 'class-validator';
+import { IsNotEmpty, IsString, IsOptional, IsUrl } from 'class-validator';
 
 export class GalleryDto {
   @ApiProperty({
     description: '사용자 ID',
-    example: 1,
+    example: '550e8400-e29b-41d4-a716-446655440000',
     required: true,
   })
   @IsNotEmpty({ message: 'userId는 필수 항목입니다.' })
-  @IsNumber({}, { message: 'userId는 숫자여야 합니다.' })
-  userId: number;
+  @IsString({ message: 'userId는 문자열이어야 합니다.' })
+  userId: string;
 
   @ApiProperty({
     description: '이미지 이름',

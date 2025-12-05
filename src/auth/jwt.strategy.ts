@@ -4,7 +4,7 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 import { Request } from 'express';
 
 export interface JwtPayload {
-  sub: number; // userId
+  sub: string; // userId (UUID)
   username: string;
   role: string;
 }
@@ -36,4 +36,3 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     };
   }
 }
-

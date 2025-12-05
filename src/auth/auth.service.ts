@@ -53,6 +53,7 @@ export class AuthService {
     await this.userRepository.save(user);
 
     // 비밀번호 제외하고 반환
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password: _, ...result } = user;
     return result;
   }
@@ -97,11 +98,12 @@ export class AuthService {
   }
 
   // 사용자 정보 조회 (토큰 검증용)
-  async getUserById(userId: number) {
+  async getUserById(userId: string) {
     const user = await this.userRepository.findOne({ where: { id: userId } });
     if (!user) {
       throw new UnauthorizedException('사용자를 찾을 수 없습니다.');
     }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password: _, ...result } = user;
     return result;
   }

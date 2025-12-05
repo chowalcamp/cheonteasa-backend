@@ -20,10 +20,10 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     }
 
     // RequireAuth 데코레이터가 있는 경우 무조건 인증 필요
-    const requireAuth = this.reflector.getAllAndOverride<boolean>('requireAuth', [
-      context.getHandler(),
-      context.getClass(),
-    ]);
+    const requireAuth = this.reflector.getAllAndOverride<boolean>(
+      'requireAuth',
+      [context.getHandler(), context.getClass()],
+    );
 
     if (requireAuth) {
       return super.canActivate(context);
@@ -38,4 +38,3 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     return super.canActivate(context);
   }
 }
-

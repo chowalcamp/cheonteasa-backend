@@ -1,5 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString, MinLength, IsEmail, IsOptional } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsString,
+  MinLength,
+  IsEmail,
+  IsOptional,
+} from 'class-validator';
 
 export class RegisterDto {
   @ApiProperty({
@@ -46,4 +52,3 @@ export class RegisterDto {
   @IsString({ message: 'phone은 문자열이어야 합니다.' })
   phone?: string;
 }
-

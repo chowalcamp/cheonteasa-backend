@@ -21,7 +21,7 @@ export class NewsService {
     return newNews;
   }
 
-  async findOne(newsId: number) {
+  async findOne(newsId: string) {
     const news = await this.newsRepository.findOne({
       where: { id: newsId },
     });
@@ -44,7 +44,7 @@ export class NewsService {
     }));
   }
 
-  async update(newsId: number, newsData: NewsDto) {
+  async update(newsId: string, newsData: NewsDto) {
     if (!newsData.content || !newsData.title) {
       throw new Error('Content or title is required');
     }
@@ -59,7 +59,7 @@ export class NewsService {
     return await this.newsRepository.findOne({ where: { id: newsId } });
   }
 
-  async remove(newsId: number) {
+  async remove(newsId: string) {
     const news = await this.newsRepository.findOne({
       where: { id: newsId },
     });

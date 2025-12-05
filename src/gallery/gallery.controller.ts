@@ -30,7 +30,8 @@ export class GalleryController {
   @Post()
   @ApiOperation({
     summary: '갤러리 이미지 생성 (로그인 필요)',
-    description: '새로운 갤러리 이미지를 등록합니다. 로그인한 사용자만 사용 가능합니다.',
+    description:
+      '새로운 갤러리 이미지를 등록합니다. 로그인한 사용자만 사용 가능합니다.',
   })
   @ApiBody({ type: GalleryDto })
   @ApiResponse({
@@ -47,7 +48,8 @@ export class GalleryController {
   @Get('list')
   @ApiOperation({
     summary: '전체 갤러리 이미지 조회',
-    description: '모든 갤러리 이미지 목록을 조회합니다. 최신순으로 정렬됩니다. (인증 불필요)',
+    description:
+      '모든 갤러리 이미지 목록을 조회합니다. 최신순으로 정렬됩니다. (인증 불필요)',
   })
   @ApiResponse({
     status: 200,
@@ -63,14 +65,14 @@ export class GalleryController {
     summary: '특정 갤러리 이미지 조회',
     description: 'ID로 특정 갤러리 이미지를 조회합니다. (인증 불필요)',
   })
-  @ApiParam({ name: 'id', description: '갤러리 ID', type: 'number' })
+  @ApiParam({ name: 'id', description: '갤러리 ID', type: 'string' })
   @ApiResponse({
     status: 200,
     description: '갤러리 조회 성공',
     type: Gallery,
   })
   @ApiResponse({ status: 404, description: '갤러리를 찾을 수 없습니다.' })
-  getGallery(@Param('id') galleryId: number) {
+  getGallery(@Param('id') galleryId: string) {
     return this.galleryService.findOne(galleryId);
   }
 
@@ -79,9 +81,10 @@ export class GalleryController {
   @Put(':id')
   @ApiOperation({
     summary: '갤러리 이미지 수정 (로그인 필요)',
-    description: '기존 갤러리 이미지를 수정합니다. 로그인한 사용자만 사용 가능합니다.',
+    description:
+      '기존 갤러리 이미지를 수정합니다. 로그인한 사용자만 사용 가능합니다.',
   })
-  @ApiParam({ name: 'id', description: '갤러리 ID', type: 'number' })
+  @ApiParam({ name: 'id', description: '갤러리 ID', type: 'string' })
   @ApiBody({ type: GalleryDto })
   @ApiResponse({
     status: 200,
@@ -91,7 +94,7 @@ export class GalleryController {
   @ApiResponse({ status: 404, description: '갤러리를 찾을 수 없습니다.' })
   @ApiResponse({ status: 401, description: '인증되지 않은 사용자' })
   updateGallery(
-    @Param('id') galleryId: number,
+    @Param('id') galleryId: string,
     @Body() galleryData: GalleryDto,
   ) {
     return this.galleryService.update(galleryId, galleryData);
@@ -104,7 +107,7 @@ export class GalleryController {
     summary: '갤러리 이미지 삭제 (관리자 전용)',
     description: '갤러리 이미지를 삭제합니다. 관리자만 사용 가능합니다.',
   })
-  @ApiParam({ name: 'id', description: '갤러리 ID', type: 'number' })
+  @ApiParam({ name: 'id', description: '갤러리 ID', type: 'string' })
   @ApiResponse({
     status: 200,
     description: '갤러리가 성공적으로 삭제되었습니다.',
@@ -112,7 +115,7 @@ export class GalleryController {
   @ApiResponse({ status: 404, description: '갤러리를 찾을 수 없습니다.' })
   @ApiResponse({ status: 401, description: '인증되지 않은 사용자' })
   @ApiResponse({ status: 403, description: '권한이 없습니다.' })
-  deleteGallery(@Param('id') galleryId: number) {
+  deleteGallery(@Param('id') galleryId: string) {
     return this.galleryService.remove(galleryId);
   }
 }

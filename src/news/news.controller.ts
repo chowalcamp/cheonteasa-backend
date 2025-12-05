@@ -50,10 +50,10 @@ export class NewsController {
     summary: '특정 뉴스 조회',
     description: 'ID로 특정 뉴스를 조회합니다. (인증 불필요)',
   })
-  @ApiParam({ name: 'id', description: '뉴스 ID', type: 'number' })
+  @ApiParam({ name: 'id', description: '뉴스 ID', type: 'string' })
   @ApiResponse({ status: 200, description: '뉴스 조회 성공' })
   @ApiResponse({ status: 404, description: '뉴스를 찾을 수 없습니다.' })
-  getNewsById(@Param('id') id: number) {
+  getNewsById(@Param('id') id: string) {
     return this.newsService.findOne(id);
   }
 
@@ -64,7 +64,7 @@ export class NewsController {
     summary: '뉴스 수정 (관리자 전용)',
     description: '기존 뉴스를 수정합니다. 관리자만 사용 가능합니다.',
   })
-  @ApiParam({ name: 'id', description: '뉴스 ID', type: 'number' })
+  @ApiParam({ name: 'id', description: '뉴스 ID', type: 'string' })
   @ApiBody({ type: NewsDto })
   @ApiResponse({
     status: 200,
@@ -73,7 +73,7 @@ export class NewsController {
   @ApiResponse({ status: 404, description: '뉴스를 찾을 수 없습니다.' })
   @ApiResponse({ status: 401, description: '인증되지 않은 사용자' })
   @ApiResponse({ status: 403, description: '권한이 없습니다.' })
-  updateNews(@Param('id') id: number, @Body() newsData: NewsDto) {
+  updateNews(@Param('id') id: string, @Body() newsData: NewsDto) {
     return this.newsService.update(id, newsData);
   }
 
@@ -84,7 +84,7 @@ export class NewsController {
     summary: '뉴스 삭제 (관리자 전용)',
     description: '뉴스를 삭제합니다. 관리자만 사용 가능합니다.',
   })
-  @ApiParam({ name: 'id', description: '뉴스 ID', type: 'number' })
+  @ApiParam({ name: 'id', description: '뉴스 ID', type: 'string' })
   @ApiResponse({
     status: 200,
     description: '뉴스가 성공적으로 삭제되었습니다.',
@@ -92,7 +92,7 @@ export class NewsController {
   @ApiResponse({ status: 404, description: '뉴스를 찾을 수 없습니다.' })
   @ApiResponse({ status: 401, description: '인증되지 않은 사용자' })
   @ApiResponse({ status: 403, description: '권한이 없습니다.' })
-  deleteNews(@Param('id') id: number) {
+  deleteNews(@Param('id') id: string) {
     return this.newsService.remove(id);
   }
 }

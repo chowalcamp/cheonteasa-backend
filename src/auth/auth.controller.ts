@@ -1,7 +1,13 @@
 import { Controller, Post, Body, Res, Get, HttpCode } from '@nestjs/common';
 import { Response } from 'express';
 import { AuthService } from './auth.service';
-import { ApiTags, ApiOperation, ApiBody, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiBody,
+  ApiResponse,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { Public } from './decorators/public.decorator';
@@ -55,8 +61,14 @@ export class AuthController {
       },
     },
   })
-  @ApiResponse({ status: 401, description: '아이디 또는 비밀번호가 잘못되었습니다.' })
-  async login(@Body() loginDto: LoginDto, @Res({ passthrough: true }) res: Response) {
+  @ApiResponse({
+    status: 401,
+    description: '아이디 또는 비밀번호가 잘못되었습니다.',
+  })
+  async login(
+    @Body() loginDto: LoginDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
     const result = await this.authService.login(loginDto);
 
     // 쿠키에 토큰 저장
@@ -88,7 +100,8 @@ export class AuthController {
   @ApiBearerAuth()
   @ApiOperation({
     summary: '내 정보 조회 (인증 필요)',
-    description: '현재 로그인한 사용자의 정보를 조회합니다. GET 요청이지만 인증이 필요합니다.',
+    description:
+      '현재 로그인한 사용자의 정보를 조회합니다. GET 요청이지만 인증이 필요합니다.',
   })
   @ApiResponse({ status: 200, description: '사용자 정보 조회 성공' })
   @ApiResponse({ status: 401, description: '인증되지 않은 사용자' })

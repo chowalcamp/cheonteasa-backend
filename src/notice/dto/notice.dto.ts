@@ -3,10 +3,10 @@ import { ApiProperty } from '@nestjs/swagger';
 export class NoticeDto {
   @ApiProperty({
     description: '사용자 ID',
-    example: 1,
+    example: '550e8400-e29b-41d4-a716-446655440000',
     required: true,
   })
-  userId: number;
+  userId: string;
 
   @ApiProperty({
     description: '공지사항 제목',
@@ -31,9 +31,12 @@ export class NoticeDto {
 
   @ApiProperty({
     description: '갤러리 ID 배열 (공지사항에 첨부할 이미지들)',
-    example: [1, 2, 3],
-    type: [Number],
+    example: [
+      '550e8400-e29b-41d4-a716-446655440000',
+      '660e8400-e29b-41d4-a716-446655440001',
+    ],
+    type: [String],
     required: false,
   })
-  galleryIds?: number[];
+  galleryIds?: string[];
 }

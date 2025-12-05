@@ -15,17 +15,17 @@ import { Gallery } from './gallery.entity';
 export class Notice {
   @ApiProperty({
     description: '공지사항 ID',
-    example: 1,
+    example: '550e8400-e29b-41d4-a716-446655440000',
   })
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @ApiProperty({
     description: '사용자 ID',
-    example: 1,
+    example: '550e8400-e29b-41d4-a716-446655440000',
   })
-  @Column()
-  userId: number;
+  @Column('uuid')
+  userId: string;
 
   @ApiProperty({
     description: '공지사항 제목',

@@ -18,4 +18,3 @@ export class LoginDto {
   @IsString({ message: 'password는 문자열이어야 합니다.' })
   password: string;
 }
-

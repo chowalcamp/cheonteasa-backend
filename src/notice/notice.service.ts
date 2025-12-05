@@ -41,7 +41,7 @@ export class NoticeService {
     return savedNotice;
   }
 
-  async findOne(noticeId: number) {
+  async findOne(noticeId: string) {
     const notice = await this.noticeRepository.findOne({
       where: { id: noticeId },
       relations: ['user', 'galleries'],
@@ -87,7 +87,7 @@ export class NoticeService {
     }));
   }
 
-  async update(noticeId: number, noticeData: NoticeDto) {
+  async update(noticeId: string, noticeData: NoticeDto) {
     console.log('Updating Notice:', noticeId, noticeData);
     if (!noticeData.content || !noticeData.title) {
       throw new Error('Content and title are required');
@@ -122,7 +122,7 @@ export class NoticeService {
     });
   }
 
-  async remove(noticeId: number) {
+  async remove(noticeId: string) {
     const notice = await this.noticeRepository.findOne({
       where: { id: noticeId },
     });

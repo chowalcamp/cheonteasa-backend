@@ -26,7 +26,8 @@ export class UploadController {
   @Post('images')
   @ApiOperation({
     summary: '이미지 업로드 (로그인 필요)',
-    description: '이미지 파일을 S3에 업로드합니다. 로그인한 사용자만 사용 가능합니다.',
+    description:
+      '이미지 파일을 S3에 업로드합니다. 로그인한 사용자만 사용 가능합니다.',
   })
   @ApiConsumes('multipart/form-data')
   @ApiBody({

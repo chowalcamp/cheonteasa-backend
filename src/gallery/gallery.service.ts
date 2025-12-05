@@ -29,7 +29,7 @@ export class GalleryService {
     return gallery;
   }
 
-  async findOne(galleryId: number) {
+  async findOne(galleryId: string) {
     const gallery = await this.galleryRepository.findOne({
       where: { id: galleryId },
       relations: ['user'],
@@ -59,7 +59,7 @@ export class GalleryService {
     }));
   }
 
-  async update(galleryId: number, galleryData: GalleryDto) {
+  async update(galleryId: string, galleryData: GalleryDto) {
     const existingGallery = await this.galleryRepository.findOne({
       where: { id: galleryId },
     });
@@ -71,7 +71,7 @@ export class GalleryService {
     return await this.galleryRepository.findOne({ where: { id: galleryId } });
   }
 
-  async remove(galleryId: number) {
+  async remove(galleryId: string) {
     const gallery = await this.galleryRepository.findOne({
       where: { id: galleryId },
     });

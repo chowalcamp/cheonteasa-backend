@@ -1,7 +1,13 @@
 import { Controller, Get, Post, Body } from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from '../entities/user.entity';
-import { ApiTags, ApiOperation, ApiResponse, ApiBody, ApiBearerAuth } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBody,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
 import { Roles } from '../auth/decorators/roles.decorator';
 
 @ApiTags('users')
