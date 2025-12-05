@@ -13,9 +13,17 @@ export class GalleryService {
   ) {}
 
   async create(galleryData: GalleryDto) {
-    if (!galleryData.imageUrl || !galleryData.userId) {
-      throw new Error('userId and imageUrl are required');
+    // 디버깅을 위한 로깅
+    console.log('Received galleryData:', JSON.stringify(galleryData));
+
+    // 필수 필드 검증
+    if (!galleryData.userId) {
+      throw new Error('userId is required');
     }
+    if (!galleryData.imageUrl) {
+      throw new Error('imageUrl is required');
+    }
+
     const gallery = this.galleryRepository.create(galleryData);
     await this.galleryRepository.save(gallery);
     return gallery;

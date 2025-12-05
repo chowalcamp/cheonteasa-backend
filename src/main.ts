@@ -2,10 +2,23 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import * as cookieParser from 'cookie-parser';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.use(cookieParser()); // 쿠키 파서 미들웨어 추가
+
+  // 전역 Validation Pipe 설정
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true, // DTO에 없는 속성 제거
+      forbidNonWhitelisted: true, // DTO에 없는 속성 있으면 에러
+      transform: true, // 자동 형변환
+      transformOptions: {
+        enableImplicitConversion: true, // 암시적 형변환 활성화
+      },
+    }),
+  );
 
   // CORS 설정
   app.enableCors({
@@ -23,8 +36,8 @@ async function bootstrap() {
 
   // Swagger 설정
   const config = new DocumentBuilder()
-    .setTitle('청태사 Backend API')
-    .setDescription('청태사 백엔드 API 문서입니다.')
+    .setTitle('천태사 Backend API')
+    .setDescription('천태사 백엔드 API 문서입니다.')
     .setVersion('1.0')
     .addTag('auth', '인증 관련 API')
     .addTag('news', '뉴스 관련 API')
