@@ -5,6 +5,10 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { RolesGuard } from './auth/guards/roles.guard';
+import * as dotenv from 'dotenv';
+
+// 환경 변수를 가장 먼저 로드
+dotenv.config();
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
